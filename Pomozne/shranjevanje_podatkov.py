@@ -1,6 +1,6 @@
 import requests
 import csv
-from izluscevanje_podatkov import izlusci_bloke, izlusci_podatke, izlusci_stevilo_vseh_strani_in_vprasanj
+from Pomozne.izluscevanje_podatkov import izlusci_bloke, izlusci_podatke, izlusci_stevilo_vseh_strani_in_vprasanj
 
 
 def shrani_v_txt_datoteko(ime_txt_datoteke, html):
