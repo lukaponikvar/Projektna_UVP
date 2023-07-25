@@ -1,21 +1,37 @@
-import math
-import re
-import requests
-from izluscevanje_podatkov import izlusci_bloke, izlusci_podatke
-
-prvotni_url_naslov = "https://math.stackexchange.com/questions"
+import csv
+from izluscevanje_podatkov import izlusci_stevilo_vseh_strani_in_vprasanj
+from shranjevanje_podatkov import shrani_vprasanja_v_seznam
 
 
-def shrani_vprasanja_v_seznam(stran):
-    vprasanja = []
-    html1 = requests.get(stran)
-    with open("micka.htm", "w", encoding="utf8") as dat:
-        dat.write(html1.text)
-    bloki = izlusci_bloke(html1.text)
-    for blok in bloki:
-        vprasanje = izlusci_podatke(blok)
-        vprasanja.append(vprasanje)
-    return vprasanja,len(vprasanja)
+def shrani_vprasanja(ime_dat):
+    with open(ime_dat, "w", encoding="utf8") as dat:
+        pisatelj = csv.writer(dat)
+        pisatelj.writerow(
+            [
+                "id",
+                "ime",
+                "tags",
+                "glasovi",
+                "odgovori",
+                "ogledi",
+                "datum in ura"
+            ]
+        )
 
-print(shrani_vprasanja_v_seznam(prvotni_url_naslov))
-
+    for stevilka_strani in range(1, izlusci_stevilo_vseh_strani_in_vprasanj()[1]):
+        vprasanja = shrani_vprasanja_v_seznam(
+            f"https://math.stackexchange.com/questions?tab=newest&page={stevilka_strani}&pagesize=50")
+        with open(ime_dat, "a", encoding="utf8") as datt:
+            pisatelj = csv.writer(datt)
+            for vprasanje in vprasanja:
+                pisatelj.writerow(
+                    [
+                        vprasanje["id"],
+                        vprasanje["ime"],
+                        vprasanje["tags"],
+                        vprasanje["glasovi"],
+                        vprasanje["odgovori"],
+                        vprasanje["ogledi"],
+                        vprasanje["datum in čas objave"]
+                    ]
+                )
