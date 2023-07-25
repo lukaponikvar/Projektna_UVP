@@ -30,7 +30,7 @@ def zakljuci_izvajanje():
 
 
 def zacni():
-    print("Spoštovani, analiza Vas čaka v mapi TBD.")
+    print("Spoštovani, analiza Vas čaka v mapi Analiza.")
 
 
 def tekstovni_vmesnik():
