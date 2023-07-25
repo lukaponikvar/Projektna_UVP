@@ -26,3 +26,14 @@ def izlusci_stevilo_vseh_strani_in_vprasanj():
     stevilo = re.search(vzorec_za_re, vzorec.text, flags=re.DOTALL)
     strani = math.ceil(izlusci_stevilo(stevilo.group(1)) / 50)
     return (stevilo.group(1), strani)
+
+
+def izlusci_bloke():
+    model = r"""<div id="question-summary-\d+" class="s-post-summary    js-post-summary" data-post-id="\d+" data-post-type-id="1">.*?<time class="s-user-card--time">asked <span title='.+?' class='relativetime'>.*?</span></time>.*?</div>.*?</div>.*?</div>.*?</div>"""
+    with open("micka", "r", encoding="utf8") as f:
+        tekst = f.read()
+    rezultat = re.findall(model, tekst, flags=re.DOTALL)
+    return rezultat
+
+
+# def izlusci_podatke(blok):
