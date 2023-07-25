@@ -138,6 +138,14 @@ def izlusci_podatke(blok):
     vprašanje["odgovori"] = najdba_vav["answers"]
     vprašanje["ogledi"] = najdba_vav["views"]
 
+    # izluscimo datum in uro
+    vzorec_dat = re.compile(
+        r"""<time class="s-user-card--time">asked <span title='(?P<dat>.*?)' class='relativetime'>.*?</span></time>""",
+        re.DOTALL
+    )
+    najdba_dat = vzorec_dat.search(blok)
+    vprašanje["datum in čas objave"] = najdba_dat["dat"]
+
     return vprašanje
 
 
