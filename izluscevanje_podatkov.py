@@ -2,6 +2,8 @@ import re
 import math
 import requests
 
+prvotni_url_naslov = "https://math.stackexchange.com/questions"
+
 
 def izlusci_stevilo(niz):
     stevilo = ""
