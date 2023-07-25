@@ -27,3 +27,18 @@ def ponudi_moznosti(seznam_moznosti):
 def zakljuci_izvajanje():
     print("Nasvidenje.")
     exit()
+
+
+def zacni():
+    print("Spoštovani, analiza Vas čaka v mapi TBD.")
+
+
+def tekstovni_vmesnik():
+    pozdrav()
+    moznost = ponudi_moznosti(
+        [
+            [zacni, "Začni z analizo"],
+            [zakljuci_izvajanje, "Končaj z izvajanjem"],
+        ]
+    )
+    return moznost()
