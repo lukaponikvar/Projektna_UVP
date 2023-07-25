@@ -22,13 +22,13 @@ def izlusci_stevilo_vseh_strani_in_vprasanj():
 
 
 def izlusci_bloke(tekst):
-    model = r"""<div id="question-summary-\d+" class="s-post-summary    js-post-summary" data-post-id="\d+" data-post-type-id="1">.*?<time class="s-user-card--time">asked <span title='.+?' class='relativetime'>.*?</span></time>.*?</div>.*?</div>.*?</div>.*?</div>"""
+    model = r"""<div id="question-summary-\d+" class="s-post-summary.*?</span></time>.*?</div>.*?</div>"""
     rezultat = re.findall(model, tekst, flags=re.DOTALL)
     return rezultat
 
 
 def izlusci_podatke1(blok):
-    vprašanje = {}
+    vprasanje = {}
     vzorec = re.compile(
         r"""<div id="question-summary-(?P<id>\d+)" class="s-post-summary.*?"""
         r"""<span class="s-post-summary--stats-item-number">(?P<votes>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<span class="s-post-summary--stats-item-number">(?P<answers>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<span class="s-post-summary--stats-item-number">(?P<views>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?"""
@@ -38,11 +38,11 @@ def izlusci_podatke1(blok):
         re.DOTALL
     )
     najdba = vzorec.search(blok)
-    vprašanje["id"] = najdba["id"]
-    vprašanje["ime"] = najdba["ime"].strip()
-    vprašanje["tags"] = najdba["tag"].strip()
-    vprašanje["glasovi"] = najdba["votes"].strip()
-    vprašanje["odgovori"] = najdba["answers"].strip()
-    vprašanje["ogledi"] = najdba["views"].strip()
-    vprašanje["datum in čas objave"] = najdba["dat"].strip()
-    return vprašanje
+    vprasanje["id"] = najdba["id"]
+    vprasanje["ime"] = najdba["ime"].strip()
+    vprasanje["tags"] = najdba["tag"].strip()
+    vprasanje["glasovi"] = najdba["votes"].strip()
+    vprasanje["odgovori"] = najdba["answers"].strip()
+    vprasanje["ogledi"] = najdba["views"].strip()
+    vprasanje["datum in čas objave"] = najdba["dat"].strip()
+    return vprasanje
