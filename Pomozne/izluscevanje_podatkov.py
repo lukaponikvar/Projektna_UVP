@@ -56,7 +56,10 @@ def izlusci_podatke1(blok):
     vprasanje["Glasovi"] = najdba["votes"].strip()
     vprasanje["Odgovori"] = najdba["answers"].strip()
     vprasanje["Ogledi"] = najdba["views"].strip()
-    vprasanje["Datum in čas objave"] = najdba["dat"].strip()
+    vprasanje["Leto"] = najdba["dat"].strip().split(" ")[0].split("-")[0]
+    vprasanje["Mesec"] = najdba["dat"].strip().split(" ")[0].split("-")[1]
+    vprasanje["Dan"] = najdba["dat"].strip().split(" ")[0].split("-")[2]
+    vprasanje["Ura"] = najdba["dat"].strip().split(" ")[1]
     if najdba["sprejet"]:
         vprasanje["Sprejet odgovor"] = "Da"
     else:

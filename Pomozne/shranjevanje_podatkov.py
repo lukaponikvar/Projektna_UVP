@@ -32,8 +32,10 @@ def shrani_vprasanja(ime_dat):
                 "Odgovori",
                 "Sprejet odgovor",
                 "Ogledi",
-                "Datum in ura"
-
+                "Leto",
+                "Mesec",
+                "Dan",
+                "Ura",
             ]
         )
     strani = izlusci_stevilo_vseh_strani_in_vprasanj()[1]
@@ -54,7 +56,10 @@ def shrani_vprasanja(ime_dat):
                         vprasanje["Odgovori"],
                         vprasanje["Sprejet odgovor"],
                         vprasanje["Ogledi"],
-                        vprasanje["Datum in čas objave"]
+                        vprasanje["Leto"],
+                        vprasanje["Mesec"],
+                        vprasanje["Dan"],
+                        vprasanje["Ura"],
                     ]
                 )
         print(f"Shranjeno ({stevilka_strani}/{strani})")
