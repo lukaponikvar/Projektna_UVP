@@ -8,11 +8,11 @@ def preberi_stevilo():
         try:
             return int(vnos)
         except ValueError:
-            print("Vnesti morate število")
+            print("Vnesti morate število!")
 
 
 def ponudi_moznosti(seznam_moznosti):
-    print("Prosim izberite eno od naslednjih moznosti")
+    print("Prosim izberite eno od naslednjih moznosti.")
     for i, (_moznost, opis) in enumerate(seznam_moznosti, 1):
         print(f"{i}) {opis}")
     while True:
@@ -33,12 +33,24 @@ def zacni():
     print("Spoštovani, analiza Vas čaka v mapi Analiza.")
 
 
+def nejasnosti():
+    print("Za vsa vprašanja in dodatno razlago sem Vam na voljo na elektronskem naslovu:\nluka.ponikvar1@gmail.com!")
+    moznost = ponudi_moznosti(
+        [
+            [zacni, "Začni z analizo"],
+            [zakljuci_izvajanje, "Končaj z izvajanjem"],
+        ]
+    )
+    return moznost()
+
+
 def tekstovni_vmesnik():
     pozdrav()
     moznost = ponudi_moznosti(
         [
             [zacni, "Začni z analizo"],
             [zakljuci_izvajanje, "Končaj z izvajanjem"],
+            [nejasnosti, "Potrebujem dodatne informacije"],
         ]
     )
     return moznost()
