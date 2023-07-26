@@ -2,8 +2,6 @@ import re
 import math
 import requests
 
-prvotni_url_naslov = "https://math.stackexchange.com/questions"
-
 
 def izlusci_stevilo(niz):
     """Funkcija iz niza oblike "1,234,567" izlušči število"""
@@ -15,8 +13,8 @@ def izlusci_stevilo(niz):
 
 
 def izlusci_stevilo_vseh_vprasanj_in_vseh_strani():
-    """Funkcija vrne nabor števila vseh vprašanj in števila vseh strani"""
-    vzorec = requests.get(prvotni_url_naslov)
+    """Funkcija vrne nabor števila vseh vprašanj in števila vseh strani."""
+    vzorec = requests.get(f"https://math.stackexchange.com/questions?")
     vzorec_za_re = r"""<div class="fs-body3 flex--item fl1 mr12 sm:mr0 sm:mb12">.+?(?P<Stevilo_objav>\d+(,\d+)*).+?questions.+?</div>"""
     stevilo = re.search(vzorec_za_re, vzorec.text, flags=re.DOTALL)
     strani = math.ceil(izlusci_stevilo(stevilo.group(1)) / 50)
@@ -24,20 +22,20 @@ def izlusci_stevilo_vseh_vprasanj_in_vseh_strani():
 
 
 def izlusci_bloke(niz):
-    """Funkcija iz HTML datoteke izlušči blok z vsemi informacijami o nekem vprašanju s foruma"""
+    """Funkcija iz HTML datoteke izlušči blok z vsemi informacijami o nekem vprašanju s foruma."""
     vzorec = r"""<div id="question-summary-\d+" class="s-post-summary.*?</span></time>.*?</div>.*?</div>"""
     rezultat = re.findall(vzorec, niz, flags=re.DOTALL)
     return rezultat
 
 
 def izlusci_oznake(neobdelan_tag):
-    """Funkcija iz niza, ki vsebuje oznake naredi seznam oznak"""
+    """Funkcija iz niza, ki vsebuje oznake naredi seznam oznak."""
     tags = neobdelan_tag.strip().split(" ")
     return [tag[2:] for tag in tags]
 
 
 def izlusci_podatke_iz_bloka(blok):
-    """Funkcija iz bloka izlusci vse pomembne informacije o vprašanju in ga vrne kot slovar"""
+    """Funkcija iz bloka izlusci vse pomembne informacije o vprašanju in ga vrne kot slovar."""
     vprasanje = {}
     vzorec = re.compile(
         r"""<div id="question-summary-(?P<id>\d+)" class="s-post-summary.*?"""
