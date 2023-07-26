@@ -1,6 +1,6 @@
 import requests
 import csv
-from izluscevanje_podatkov import izlusci_bloke, izlusci_podatke_iz_bloka, izlusci_stevilo_vseh_vprasanj_in_vseh_strani
+from Izluscevanje_podatkov import izlusci_bloke, izlusci_podatke_iz_bloka, izlusci_stevilo_vseh_vprasanj_in_vseh_strani
 
 najvec_strani = izlusci_stevilo_vseh_vprasanj_in_vseh_strani()[1]
 
@@ -23,7 +23,7 @@ def shrani_vprasanja_v_seznam(stran):
     return vprasanja
 
 
-def naredi_csv(ime_datoteke):
+def naredi_CSV(ime_datoteke):
     """Funkcija naredi CSV datoteko in vanjo vpiše začetne podatke"""
     with open(ime_datoteke, "w", encoding="utf8") as dat:
         pisatelj = csv.writer(dat)
@@ -45,20 +45,22 @@ def naredi_csv(ime_datoteke):
         )
 
 
-def shrani_vprasanja(ime_datoteke, stevilo_strani=najvec_strani):
+def shrani_vprasanja_v_CSV(ime_datoteke, stevilo_strani=najvec_strani, filter="Newest"):
     """Funkcija v CSV datoteko z želenim imenom shrani informacije o vprašanjih.Lahko ji predpišemo koliko 
     strani s foruma želimo, če tega ne storimo, bo funkcija prensesla vse strani. Če delovanje funcije 
     prekinemo bo vseeno naredila CSV datoteko z do takrat prenesenimi stranmi"""
+    filtri = ["newest", "active", "bounties",
+              "unanswered", "frequent", "votes"]
     try:
-        if stevilo_strani > najvec_strani:
+        if stevilo_strani > najvec_strani or filter.casefold() not in filtri:
             raise ValueError
-        naredi_csv(ime_datoteke)
+        naredi_CSV(ime_datoteke)
         for stevilka_strani in range(1, stevilo_strani+1):
             vprasanja = shrani_vprasanja_v_seznam(
-                f"https://math.stackexchange.com/questions?tab=newest&page={stevilka_strani}&pagesize=50"
+                f"https://math.stackexchange.com/questions?tab={filter}&page={stevilka_strani}&pagesize=50"
             )
-            with open(ime_datoteke, "a", encoding="utf8") as datt:
-                pisatelj = csv.writer(datt)
+            with open(ime_datoteke, "a", encoding="utf8") as datoteka:
+                pisatelj = csv.writer(datoteka)
                 for vprasanje in vprasanja:
                     pisatelj.writerow(
                         [
@@ -79,4 +81,8 @@ def shrani_vprasanja(ime_datoteke, stevilo_strani=najvec_strani):
             print(f"Shranjeno ({stevilka_strani}/{stevilo_strani})")
         print("CSV je bil uspešno shranjen.")
     except ValueError:
+        print("Vnešeni podatko so napačni!")
         print(f"Vseh strani je le {najvec_strani}!")
+        print("Možnosti za filter so:")
+        for i in filtri:
+            print(i.title())
