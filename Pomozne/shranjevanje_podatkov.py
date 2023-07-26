@@ -45,19 +45,20 @@ def naredi_CSV(ime_datoteke):
         )
 
 
-def shrani_vprasanja_v_CSV(ime_datoteke, stevilo_strani=najvec_strani, filter="Newest"):
+def shrani_vprasanja_v_CSV(ime_datoteke, stevilo_strani=najvec_strani, filter="Newest", vprasanja_na_stran="50"):
     """Funkcija v CSV datoteko z želenim imenom shrani informacije o vprašanjih.Lahko ji predpišemo koliko 
     strani s foruma želimo, če tega ne storimo, bo funkcija prensesla vse strani. Če delovanje funcije 
     prekinemo bo vseeno naredila CSV datoteko z do takrat prenesenimi stranmi"""
     filtri = ["newest", "active", "bounties",
               "unanswered", "frequent", "votes"]
+    moznosti_vpr_na_stran = ["15", "30", "50"]
     try:
-        if stevilo_strani > najvec_strani or filter.casefold() not in filtri:
+        if stevilo_strani > najvec_strani or filter.casefold() not in filtri or vprasanja_na_stran not in moznosti_vpr_na_stran:
             raise ValueError
         naredi_CSV(ime_datoteke)
         for stevilka_strani in range(1, stevilo_strani+1):
             vprasanja = shrani_vprasanja_v_seznam(
-                f"https://math.stackexchange.com/questions?tab={filter}&page={stevilka_strani}&pagesize=50"
+                f"https://math.stackexchange.com/questions?tab={filter}&page={stevilka_strani}&pagesize={vprasanja_na_stran}"
             )
             with open(ime_datoteke, "a", encoding="utf8") as datoteka:
                 pisatelj = csv.writer(datoteka)
@@ -86,3 +87,6 @@ def shrani_vprasanja_v_CSV(ime_datoteke, stevilo_strani=najvec_strani, filter="N
         print("Možnosti za filter so:")
         for i in filtri:
             print(i.title())
+        print("Možnosti za število vprašanj na stran pa so:")
+        for j in moznosti_vpr_na_stran:
+            print(j)
