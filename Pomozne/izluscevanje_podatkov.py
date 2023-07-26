@@ -27,22 +27,38 @@ def izlusci_bloke(tekst):
     return rezultat
 
 
+def izlusci_tags(neobdelan_tag):
+    tags = neobdelan_tag.strip().split(" ")
+    return [tag[2:] for tag in tags]
+
+
 def izlusci_podatke1(blok):
     vprasanje = {}
     vzorec = re.compile(
         r"""<div id="question-summary-(?P<id>\d+)" class="s-post-summary.*?"""
-        r"""<span class="s-post-summary--stats-item-number">(?P<votes>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<span class="s-post-summary--stats-item-number">(?P<answers>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<span class="s-post-summary--stats-item-number">(?P<views>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?"""
-        r"""<h3 class="s-post-summary--content-title">.*?<a href="/questions/\d*?/.*?" class="s-link">(?P<ime>.*?)</a>.*?"""
+        r"""<span class="s-post-summary--stats-item-number">(?P<votes>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<div class="s-post-summary--stats-item( has-answers)?(?P<sprejet> has-accepted-answer)?.*?<span class="s-post-summary--stats-item-number">(?P<answers>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<span class="s-post-summary--stats-item-number">(?P<views>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?"""
+        r"""<h3 class="s-post-summary--content-title">.*?<a href="/questions/\d*?/.*?" class="s-link">(?P<ime>.*?)(?P<duplikat> \[duplicate\])?(?P<zaprto> \[closed\])?</a>.*?"""
         r"""<div class="s-post-summary--meta">.*?<div class="s-post-summary--meta-tags d-inline-block tags js-tags (?P<tag>(t-.*?)*?)">.*?"""
-        r"""<time class="s-user-card--time">asked <span title='(?P<dat>.*?)' class='relativetime'>.*?</span></time>""",
+        r"""<time class="s-user-card--time">asked <span title='(?P<dat>.*?)Z?' class='relativetime'>.*?</span></time>""",
         re.DOTALL
     )
+
     najdba = vzorec.search(blok)
-    vprasanje["id"] = najdba["id"]
-    vprasanje["ime"] = najdba["ime"].strip()
-    vprasanje["tags"] = najdba["tag"].strip()
-    vprasanje["glasovi"] = najdba["votes"].strip()
-    vprasanje["odgovori"] = najdba["answers"].strip()
-    vprasanje["ogledi"] = najdba["views"].strip()
-    vprasanje["datum in čas objave"] = najdba["dat"].strip()
+    vprasanje["Id"] = najdba["id"]
+    vprasanje["Ime"] = najdba["ime"].strip()
+    if najdba["duplikat"]:
+        vprasanje["Opomba"] = "Duplikat"
+    elif najdba["zaprto"]:
+        vprasanje["Opomba"] = "Zaprt"
+    else:
+        vprasanje["Opomba"] = "Odprt"
+    vprasanje["Oznake"] = izlusci_tags(najdba["tag"])
+    vprasanje["Glasovi"] = najdba["votes"].strip()
+    vprasanje["Odgovori"] = najdba["answers"].strip()
+    vprasanje["Ogledi"] = najdba["views"].strip()
+    vprasanje["Datum in čas objave"] = najdba["dat"].strip()
+    if najdba["sprejet"]:
+        vprasanje["Sprejet odgovor"] = "Da"
+    else:
+        vprasanje["Sprejet odgovor"] = "Ne"
     return vprasanje

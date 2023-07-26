@@ -24,13 +24,16 @@ def shrani_vprasanja(ime_dat):
         pisatelj = csv.writer(dat)
         pisatelj.writerow(
             [
-                "id",
-                "ime",
-                "tags",
-                "glasovi",
-                "odgovori",
-                "ogledi",
-                "datum in ura"
+                "Id",
+                "Ime",
+                "Opomba",
+                "Oznake",
+                "Glasovi",
+                "Odgovori",
+                "Sprejet odgovor",
+                "Ogledi",
+                "Datum in ura"
+
             ]
         )
     strani = izlusci_stevilo_vseh_strani_in_vprasanj()[1]
@@ -43,13 +46,15 @@ def shrani_vprasanja(ime_dat):
             for vprasanje in vprasanja:
                 pisatelj.writerow(
                     [
-                        vprasanje["id"],
-                        vprasanje["ime"],
-                        vprasanje["tags"],
-                        vprasanje["glasovi"],
-                        vprasanje["odgovori"],
-                        vprasanje["ogledi"],
-                        vprasanje["datum in čas objave"]
+                        vprasanje["Id"],
+                        vprasanje["Ime"],
+                        vprasanje["Opomba"],
+                        vprasanje["Oznake"],
+                        vprasanje["Glasovi"],
+                        vprasanje["Odgovori"],
+                        vprasanje["Sprejet odgovor"],
+                        vprasanje["Ogledi"],
+                        vprasanje["Datum in čas objave"]
                     ]
                 )
         print(f"Shranjeno ({stevilka_strani}/{strani})")
