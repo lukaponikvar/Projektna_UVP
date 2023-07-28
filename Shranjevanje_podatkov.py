@@ -1,5 +1,6 @@
 import requests
 import csv
+import os
 from Izluscevanje_podatkov import izlusci_bloke, izlusci_podatke_iz_bloka, izlusci_stevilo_vseh_vprasanj_in_vseh_strani
 
 najvec_strani = izlusci_stevilo_vseh_vprasanj_in_vseh_strani()[1]
@@ -45,7 +46,7 @@ def naredi_CSV(ime_datoteke):
         )
 
 
-def shrani_vprasanja_v_CSV(ime_datoteke, stevilo_strani=None, filter="Newest"):
+def shrani_vprasanja_v_CSV(ime_CSV_datoteke, mapa="", stevilo_strani=None, filter="newest"):
     """Funkcija v CSV datoteko z želenim imenom shrani informacije o vprašanjih. Lahko ji predpišemo koliko 
     strani s foruma želimo, če tega ne storimo, bo funkcija prensesla vse strani. Predpišemo ji lahko tudi filter. 
     Če delovanje funcije prekinemo, bo vseeno naredila CSV datoteko z do takrat prenesenimi stranmi."""
@@ -56,12 +57,14 @@ def shrani_vprasanja_v_CSV(ime_datoteke, stevilo_strani=None, filter="Newest"):
             raise ValueError
         elif not stevilo_strani or int(stevilo_strani) > najvec_strani:
             stevilo_strani = najvec_strani
-        naredi_CSV(ime_datoteke)
+        os.makedirs(mapa, exist_ok=True)
+        pot = os.path.join(mapa, ime_CSV_datoteke)
+        naredi_CSV(pot)
         for stevilka_strani in range(1, int(stevilo_strani)+1):
             vprasanja = shrani_vprasanja_v_seznam(
                 f"https://math.stackexchange.com/questions?tab={filter}&page={stevilka_strani}&pagesize=50"
             )
-            with open(ime_datoteke, "a", encoding="utf8") as datoteka:
+            with open(pot, "a", encoding="utf8") as datoteka:
                 pisatelj = csv.writer(datoteka)
                 for vprasanje in vprasanja:
                     pisatelj.writerow(
@@ -87,6 +90,3 @@ def shrani_vprasanja_v_CSV(ime_datoteke, stevilo_strani=None, filter="Newest"):
         print("Možnosti za filter so:")
         for i in filtri:
             print(i.title())
-
-
-shrani_vprasanja_v_CSV("nek.csv", 4, "newest")

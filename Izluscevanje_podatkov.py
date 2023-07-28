@@ -57,7 +57,11 @@ def izlusci_podatke_iz_bloka(blok):
     vprasanje["Oznake"] = izlusci_oznake(najdba["tag"])
     vprasanje["Glasovi"] = najdba["votes"].strip()
     vprasanje["Odgovori"] = najdba["answers"].strip()
-    vprasanje["Ogledi"] = najdba["views"].strip()
+    ogledi_raw = najdba["views"].strip()
+    if "k" in ogledi_raw:
+        vprasanje["Ogledi"] = ogledi_raw[:-1]+"000"
+    else:
+        vprasanje["Ogledi"] = ogledi_raw
     vprasanje["Leto"] = najdba["date"].strip().split(" ")[0].split("-")[0]
     vprasanje["Mesec"] = najdba["date"].strip().split(" ")[0].split("-")[1]
     vprasanje["Dan"] = najdba["date"].strip().split(" ")[0].split("-")[2]
