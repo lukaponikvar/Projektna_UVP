@@ -39,7 +39,7 @@ def izlusci_podatke_iz_bloka(blok):
     vprasanje = {}
     vzorec = re.compile(
         r"""<div id="question-summary-(?P<id>\d+)" class="s-post-summary.*?"""
-        r"""<span class="s-post-summary--stats-item-number">(?P<votes>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<div class="s-post-summary--stats-item( has-answers)?(?P<sprejet> has-accepted-answer)?.*?<span class="s-post-summary--stats-item-number">(?P<answers>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<span class="s-post-summary--stats-item-number">(?P<views>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?"""
+        r"""<span class="s-post-summary--stats-item-number">(?P<votes>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<div class="s-post-summary--stats-item( has-answers)?(?P<sprejet> has-accepted-answer)?.*?<span class="s-post-summary--stats-item-number">(?P<answers>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<div class="s-post-summary--stats-item.*?" title="(?P<views>\d+) views?">.*?"""
         r"""<h3 class="s-post-summary--content-title">.*?<a href="/questions/\d*?/.*?" class="s-link">(?P<ime>.*?)(?P<duplikat> \[duplicate\])?(?P<zaprto> \[closed\])?</a>.*?"""
         r"""<div class="s-post-summary--meta">.*?<div class="s-post-summary--meta-tags d-inline-block tags js-tags (?P<tag>(t-.*?)*?)">.*?"""
         r"""<time class="s-user-card--time">asked <span title='(?P<date>.*?)Z?' class='relativetime'>.*?</span></time>""",
@@ -57,11 +57,7 @@ def izlusci_podatke_iz_bloka(blok):
     vprasanje["Oznake"] = izlusci_oznake(najdba["tag"])
     vprasanje["Glasovi"] = najdba["votes"].strip()
     vprasanje["Odgovori"] = najdba["answers"].strip()
-    ogledi_raw = najdba["views"].strip()
-    if "k" in ogledi_raw:
-        vprasanje["Ogledi"] = ogledi_raw[:-1]+"000"
-    else:
-        vprasanje["Ogledi"] = ogledi_raw
+    vprasanje["Ogledi"] = najdba["views"].strip()
     vprasanje["Leto"] = najdba["date"].strip().split(" ")[0].split("-")[0]
     vprasanje["Mesec"] = najdba["date"].strip().split(" ")[0].split("-")[1]
     vprasanje["Dan"] = najdba["date"].strip().split(" ")[0].split("-")[2]
