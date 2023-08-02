@@ -23,9 +23,12 @@ def izlusci_stevilo_vseh_vprasanj_in_vseh_strani():
 
 def izlusci_bloke(niz):
     """Funkcija iz HTML datoteke izlušči blok z vsemi informacijami o nekem vprašanju s foruma."""
-    vzorec = r"""<div id="question-summary-\d+" class="s-post-summary.*?</span></time>.*?</div>.*?</div>"""
-    rezultat = re.findall(vzorec, niz, flags=re.DOTALL)
+    vzorec = r"""<div id="question-summary-\d+" class="s-post-summary.*?(?:(?:>Community wiki)|(?:</span></time>))"""
+    rezultat = re.findall(vzorec, niz, flags=re.DOTALL,)
     return rezultat
+
+# <div id="question-summary-\d+" class="s-post-summary.*?(?:(?:>Community wiki)|(?:</span></time>))
+# <div id="question-summary-\d+" class="s-post-summary.*?(?:</span></time>)?(?:>Community wiki)?</div>
 
 
 def izlusci_oznake(neobdelan_tag):
@@ -42,7 +45,7 @@ def izlusci_podatke_iz_bloka(blok):
         r"""<span class="s-post-summary--stats-item-number">(?P<votes>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<div class="s-post-summary--stats-item( has-answers)?(?P<sprejet> has-accepted-answer)?.*?<span class="s-post-summary--stats-item-number">(?P<answers>.+?)</span>.*?<span class="s-post-summary--stats-item-unit">.*?</span>.*?<div class="s-post-summary--stats-item.*?" title="(?P<views>\d+) views?">.*?"""
         r"""<h3 class="s-post-summary--content-title">.*?<a href="/questions/\d*?/.*?" class="s-link">(?P<ime>.*?)(?P<duplikat> \[duplicate\])?(?P<zaprto> \[closed\])?</a>.*?"""
         r"""<div class="s-post-summary--meta">.*?<div class="s-post-summary--meta-tags d-inline-block tags js-tags (?P<tag>(t-.*?)*?)">.*?"""
-        r"""<time class="s-user-card--time">asked <span title='(?P<date>.*?)Z?' class='relativetime'>.*?</span></time>""",
+        r"""((<time class="s-user-card--time">asked <span title='(?P<date>.*?)Z?' class='relativetime'>.*?</span></time>)|(Community wiki))""",
         re.DOTALL
     )
     najdba = vzorec.search(blok)
@@ -58,10 +61,16 @@ def izlusci_podatke_iz_bloka(blok):
     vprasanje["Glasovi"] = najdba["votes"].strip()
     vprasanje["Odgovori"] = najdba["answers"].strip()
     vprasanje["Ogledi"] = najdba["views"].strip()
-    vprasanje["Leto"] = najdba["date"].strip().split(" ")[0].split("-")[0]
-    vprasanje["Mesec"] = najdba["date"].strip().split(" ")[0].split("-")[1]
-    vprasanje["Dan"] = najdba["date"].strip().split(" ")[0].split("-")[2]
-    vprasanje["Ura"] = najdba["date"].strip().split(" ")[1]
+    if najdba["date"]:
+        vprasanje["Leto"] = najdba["date"].strip().split(" ")[0].split("-")[0]
+        vprasanje["Mesec"] = najdba["date"].strip().split(" ")[0].split("-")[1]
+        vprasanje["Dan"] = najdba["date"].strip().split(" ")[0].split("-")[2]
+        vprasanje["Ura"] = najdba["date"].strip().split(" ")[1]
+    else:
+        vprasanje["Leto"] = None
+        vprasanje["Mesec"] = None
+        vprasanje["Dan"] = None
+        vprasanje["Ura"] = None
     if najdba["sprejet"]:
         vprasanje["Sprejet odgovor"] = "Da"
     else:
