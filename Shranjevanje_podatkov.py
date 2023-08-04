@@ -71,7 +71,7 @@ def shrani_vprasanja_v_CSV(ime_CSV_datoteke, mapa="", stevilo_strani=None, filte
         os.makedirs(mapa, exist_ok=True)
         pot = os.path.join(mapa, ime_CSV_datoteke)
         naredi_CSV_1(pot+".csv")
-        naredi_CSV_2(pot+"_pomozna.csv")
+        naredi_CSV_2(pot+"_oznake.csv")
         for stevilka_strani in range(1, int(stevilo_strani)+1):
             vprasanja = shrani_vprasanja_v_seznam(
                 f"https://math.stackexchange.com/questions?tab={filter}&page={stevilka_strani}&pagesize=50"
