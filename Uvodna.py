@@ -1,4 +1,3 @@
-from Tekstovni_vmesnik import tekstovni_vmesnik
-
-
-tekstovni_vmesnik()
+from Shranjevanje_podatkov import shrani_v_txt_datoteko
+from Izluscevanje_podatkov import izlusci_bloke, izlusci_podatke_iz_bloka
+import requests
