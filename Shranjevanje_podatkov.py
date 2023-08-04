@@ -3,6 +3,7 @@ import csv
 import os
 from Izluscevanje_podatkov import izlusci_bloke, izlusci_podatke_iz_bloka, izlusci_stevilo_vseh_vprasanj_in_vseh_strani
 
+
 najvec_strani = izlusci_stevilo_vseh_vprasanj_in_vseh_strani()[1]
 
 
@@ -46,7 +47,7 @@ def naredi_CSV_1(ime_datoteke):
 
 
 def naredi_CSV_2(ime_datoteke):
-    """Funkcija naredi CSV datoteko in vanjo vpiše začetne podatke."""
+    """Funkcija naredi pomožno CSV datoteko in vanjo vpiše začetne podatke."""
     with open(ime_datoteke, "w", encoding="utf8") as dat:
         pisatelj = csv.writer(dat)
         pisatelj.writerow(
@@ -57,8 +58,40 @@ def naredi_CSV_2(ime_datoteke):
         )
 
 
+def vpiši_podatke_v_CSV(pot_1, pot_2, stevilo_strani):
+    """funkcija v CSV zapiše informacije o vprašanjih"""
+    for stevilka_strani in range(1, int(stevilo_strani)+1):
+        vprasanja = shrani_vprasanja_v_seznam(
+            f"https://math.stackexchange.com/questions?tab={filter}&page={stevilka_strani}&pagesize=50"
+        )
+        with open(pot_1, "a", encoding="utf8") as datoteka:
+            with open(pot_2, "a", encoding="utf8") as datoteka_pom:
+                pisatelj = csv.writer(datoteka)
+                pisatelj_pom = csv.writer(datoteka_pom)
+                for vprasanje in vprasanja:
+                    pisatelj.writerow(
+                        [
+                            vprasanje["Id"],
+                            vprasanje["Ime"],
+                            vprasanje["Opomba"],
+                            vprasanje["Glasovi"],
+                            vprasanje["Odgovori"],
+                            vprasanje["Sprejet odgovor"],
+                            vprasanje["Ogledi"],
+                            vprasanje["Leto"],
+                            vprasanje["Mesec"],
+                            vprasanje["Dan"],
+                            vprasanje["Ura"],
+                        ]
+                    )
+                    for oznaka in vprasanje["Oznake"]:
+                        pisatelj_pom.writerow([vprasanje["Id"], oznaka])
+        print(f"Shranjeno ({stevilka_strani}/{stevilo_strani})")
+    print("CSV je bil uspešno shranjen.")
+
+
 def shrani_vprasanja_v_CSV(ime_CSV_datoteke, mapa="", stevilo_strani=None, filter="newest"):
-    """Funkcija v CSV datoteko z želenim imenom shrani informacije o vprašanjih. Lahko ji predpišemo koliko 
+    """Funkcija v CSV datoteki z želenimi imeni shrani informacije o vprašanjih. Lahko ji predpišemo koliko 
     strani s foruma želimo, če tega ne storimo, bo funkcija prensesla vse strani. Predpišemo ji lahko tudi filter. 
     Če delovanje funcije prekinemo, bo vseeno naredila CSV datoteko z do takrat prenesenimi stranmi."""
     filtri = ["newest", "active", "bounties",
@@ -73,34 +106,7 @@ def shrani_vprasanja_v_CSV(ime_CSV_datoteke, mapa="", stevilo_strani=None, filte
         pot_oznake = pot[:-4]+"_oznake.csv"
         naredi_CSV_1(pot)
         naredi_CSV_2(pot_oznake)
-        for stevilka_strani in range(1, int(stevilo_strani)+1):
-            vprasanja = shrani_vprasanja_v_seznam(
-                f"https://math.stackexchange.com/questions?tab={filter}&page={stevilka_strani}&pagesize=50"
-            )
-            with open(pot, "a", encoding="utf8") as datoteka:
-                with open(pot_oznake, "a", encoding="utf8") as datoteka_pom:
-                    pisatelj = csv.writer(datoteka)
-                    pisatelj_pom = csv.writer(datoteka_pom)
-                    for vprasanje in vprasanja:
-                        pisatelj.writerow(
-                            [
-                                vprasanje["Id"],
-                                vprasanje["Ime"],
-                                vprasanje["Opomba"],
-                                vprasanje["Glasovi"],
-                                vprasanje["Odgovori"],
-                                vprasanje["Sprejet odgovor"],
-                                vprasanje["Ogledi"],
-                                vprasanje["Leto"],
-                                vprasanje["Mesec"],
-                                vprasanje["Dan"],
-                                vprasanje["Ura"],
-                            ]
-                        )
-                        for oznaka in vprasanje["Oznake"]:
-                            pisatelj_pom.writerow([vprasanje["Id"], oznaka])
-            print(f"Shranjeno ({stevilka_strani}/{stevilo_strani})")
-        print("CSV je bil uspešno shranjen.")
+        vpiši_podatke_v_CSV(pot, pot_oznake, stevilo_strani)
     except ValueError:
         print("Vnešeni podatki so napačni!")
         print("Možnosti za filter so:")
