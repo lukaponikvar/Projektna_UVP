@@ -24,7 +24,7 @@ def shrani_vprasanja_v_seznam(stran):
     return vprasanja
 
 
-def naredi_CSV(ime_datoteke):
+def naredi_CSV_1(ime_datoteke):
     """Funkcija naredi CSV datoteko in vanjo vpiše začetne podatke."""
     with open(ime_datoteke, "w", encoding="utf8") as dat:
         pisatelj = csv.writer(dat)
@@ -33,7 +33,6 @@ def naredi_CSV(ime_datoteke):
                 "Id",
                 "Ime",
                 "Opomba",
-                "Oznake",
                 "Glasovi",
                 "Odgovori",
                 "Sprejet odgovor",
@@ -42,6 +41,18 @@ def naredi_CSV(ime_datoteke):
                 "Mesec",
                 "Dan",
                 "Ura",
+            ]
+        )
+
+
+def naredi_CSV_2(ime_datoteke):
+    """Funkcija naredi CSV datoteko in vanjo vpiše začetne podatke."""
+    with open(ime_datoteke, "w", encoding="utf8") as dat:
+        pisatelj = csv.writer(dat)
+        pisatelj.writerow(
+            [
+                "Id",
+                "Oznaka",
             ]
         )
 
@@ -59,30 +70,34 @@ def shrani_vprasanja_v_CSV(ime_CSV_datoteke, mapa="", stevilo_strani=None, filte
             stevilo_strani = najvec_strani
         os.makedirs(mapa, exist_ok=True)
         pot = os.path.join(mapa, ime_CSV_datoteke)
-        naredi_CSV(pot)
+        naredi_CSV_1(pot+".csv")
+        naredi_CSV_2(pot+"_pomozna.csv")
         for stevilka_strani in range(1, int(stevilo_strani)+1):
             vprasanja = shrani_vprasanja_v_seznam(
                 f"https://math.stackexchange.com/questions?tab={filter}&page={stevilka_strani}&pagesize=50"
             )
-            with open(pot, "a", encoding="utf8") as datoteka:
-                pisatelj = csv.writer(datoteka)
-                for vprasanje in vprasanja:
-                    pisatelj.writerow(
-                        [
-                            vprasanje["Id"],
-                            vprasanje["Ime"],
-                            vprasanje["Opomba"],
-                            vprasanje["Oznake"],
-                            vprasanje["Glasovi"],
-                            vprasanje["Odgovori"],
-                            vprasanje["Sprejet odgovor"],
-                            vprasanje["Ogledi"],
-                            vprasanje["Leto"],
-                            vprasanje["Mesec"],
-                            vprasanje["Dan"],
-                            vprasanje["Ura"],
-                        ]
-                    )
+            with open(pot+".csv", "a", encoding="utf8") as datoteka:
+                with open(pot+"_pomozna.csv", "a", encoding="utf8") as datoteka_pom:
+                    pisatelj = csv.writer(datoteka)
+                    pisatelj_pom = csv.writer(datoteka_pom)
+                    for vprasanje in vprasanja:
+                        pisatelj.writerow(
+                            [
+                                vprasanje["Id"],
+                                vprasanje["Ime"],
+                                vprasanje["Opomba"],
+                                vprasanje["Glasovi"],
+                                vprasanje["Odgovori"],
+                                vprasanje["Sprejet odgovor"],
+                                vprasanje["Ogledi"],
+                                vprasanje["Leto"],
+                                vprasanje["Mesec"],
+                                vprasanje["Dan"],
+                                vprasanje["Ura"],
+                            ]
+                        )
+                        for oznaka in vprasanje["Oznake"]:
+                            pisatelj_pom.writerow([vprasanje["Id"], oznaka])
             print(f"Shranjeno ({stevilka_strani}/{stevilo_strani})")
         print("CSV je bil uspešno shranjen.")
     except ValueError:
