@@ -70,14 +70,15 @@ def shrani_vprasanja_v_CSV(ime_CSV_datoteke, mapa="", stevilo_strani=None, filte
             stevilo_strani = najvec_strani
         os.makedirs(mapa, exist_ok=True)
         pot = os.path.join(mapa, ime_CSV_datoteke)
-        naredi_CSV_1(pot+".csv")
-        naredi_CSV_2(pot+"_oznake.csv")
+        pot_oznake = pot[:-4]+"_oznake.csv"
+        naredi_CSV_1(pot)
+        naredi_CSV_2(pot_oznake)
         for stevilka_strani in range(1, int(stevilo_strani)+1):
             vprasanja = shrani_vprasanja_v_seznam(
                 f"https://math.stackexchange.com/questions?tab={filter}&page={stevilka_strani}&pagesize=50"
             )
-            with open(pot+".csv", "a", encoding="utf8") as datoteka:
-                with open(pot+"_pomozna.csv", "a", encoding="utf8") as datoteka_pom:
+            with open(pot, "a", encoding="utf8") as datoteka:
+                with open(pot_oznake, "a", encoding="utf8") as datoteka_pom:
                     pisatelj = csv.writer(datoteka)
                     pisatelj_pom = csv.writer(datoteka_pom)
                     for vprasanje in vprasanja:
