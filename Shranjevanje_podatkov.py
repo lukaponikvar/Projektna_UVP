@@ -38,10 +38,7 @@ def naredi_CSV_1(ime_datoteke):
                 "Odgovori",
                 "Sprejet odgovor",
                 "Ogledi",
-                "Leto",
-                "Mesec",
-                "Dan",
-                "Ura",
+                "Datum in ura",
             ]
         )
 
@@ -58,7 +55,7 @@ def naredi_CSV_2(ime_datoteke):
         )
 
 
-def vpiši_podatke_v_CSV(pot_1, pot_2, stevilo_strani):
+def vpiši_podatke_v_CSV(pot_1, pot_2, stevilo_strani, filter):
     """funkcija v CSV zapiše informacije o vprašanjih"""
     for stevilka_strani in range(1, int(stevilo_strani)+1):
         vprasanja = shrani_vprasanja_v_seznam(
@@ -78,10 +75,7 @@ def vpiši_podatke_v_CSV(pot_1, pot_2, stevilo_strani):
                             vprasanje["Odgovori"],
                             vprasanje["Sprejet odgovor"],
                             vprasanje["Ogledi"],
-                            vprasanje["Leto"],
-                            vprasanje["Mesec"],
-                            vprasanje["Dan"],
-                            vprasanje["Ura"],
+                            vprasanje["Datum in ura"],
                         ]
                     )
                     for oznaka in vprasanje["Oznake"]:
@@ -106,7 +100,7 @@ def shrani_vprasanja_v_CSV(ime_CSV_datoteke, mapa="", stevilo_strani=None, filte
         pot_oznake = pot[:-4]+"_oznake.csv"
         naredi_CSV_1(pot)
         naredi_CSV_2(pot_oznake)
-        vpiši_podatke_v_CSV(pot, pot_oznake, stevilo_strani)
+        vpiši_podatke_v_CSV(pot, pot_oznake, stevilo_strani, filter)
     except ValueError:
         print("Vnešeni podatki so napačni!")
         print("Možnosti za filter so:")
