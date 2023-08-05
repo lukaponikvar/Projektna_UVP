@@ -15,4 +15,4 @@ def prevedi(str):
     if str == "Sunday":
         return "Nedelja"
     else:
-        return str
+        return None
