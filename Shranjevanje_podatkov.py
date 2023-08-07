@@ -11,7 +11,6 @@ def shrani_v_txt_datoteko(ime_txt_datoteke, html):
     """Funkcija HTML izbrane strani shrani v datoteko z želenim imenom."""
     with open(ime_txt_datoteke, "w", encoding="utf8") as f:
         f.write(html)
-    return None
 
 
 def shrani_vprasanja_v_seznam(stran):
