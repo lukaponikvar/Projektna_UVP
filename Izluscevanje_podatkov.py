@@ -25,7 +25,7 @@ def izlusci_stevilo_vseh_vprasanj_in_vseh_strani():
 def izlusci_bloke(niz):
     """Funkcija iz HTML datoteke izlušči blok z vsemi informacijami o nekem vprašanju s foruma."""
     vzorec = r"""<div id="question-summary-\d+" class="s-post-summary.*?(?:(?:>Community wiki)|(?:</span></time>))"""
-    rezultat = re.findall(vzorec, niz, flags=re.DOTALL,)
+    rezultat = re.findall(vzorec, niz, flags=re.DOTALL)
     return rezultat
 
 
